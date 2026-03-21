@@ -1,0 +1,55 @@
+@import url('https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 32 42% 93%;
+    --foreground: 22 14% 17%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 22 14% 17%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 22 14% 17%;
+
+    --primary: 353 66% 47%;
+    --primary-foreground: 0 0% 98%;
+
+    --secondary: 199 58% 43%;
+    --secondary-foreground: 0 0% 100%;
+
+    --accent: 41 89% 62%;
+    --accent-foreground: 22 14% 17%;
+
+    --success: 132 28% 43%;
+    --success-foreground: 0 0% 98%;
+
+    --muted: 30 28% 88%;
+    --muted-foreground: 22 12% 35%;
+
+    --destructive: 0 72% 52%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 30 20% 80%;
+    --input: 30 20% 80%;
+    --ring: 353 66% 47%;
+
+    --radius: 0.75rem;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased font-sans text-base;
+    min-height: 100vh;
+  }
+
+  :focus-visible {
+    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+  }
+}
