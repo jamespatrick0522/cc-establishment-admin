@@ -111,3 +111,41 @@ export interface ChatMessageFailedPayload {
   reason: string;
   at: string;
 }
+
+export type VoiceCallStatus = 'ringing' | 'accepted' | 'rejected' | 'missed' | 'ended';
+
+export interface VoiceCall {
+  id: string;
+  establishmentId: string;
+  guestFullName: string;
+  guestEmail: string | null;
+  guestPhone: string | null;
+  status: VoiceCallStatus;
+  provider: 'agora' | string;
+  channelName: string;
+  startedAt: string;
+  acceptedAt: string | null;
+  endedAt: string | null;
+  expiresAt: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface VoiceCallTokenPayload {
+  appId: string;
+  channelName: string;
+  uid: string;
+  token: string;
+  expiresAt: string;
+}
+
+export interface VoiceCallResponse {
+  call: VoiceCall;
+  agora?: VoiceCallTokenPayload | null;
+}
+
+export interface VoiceCallEventPayload {
+  call: VoiceCall;
+  establishmentName?: string;
+  clientRequestId?: string | null;
+}

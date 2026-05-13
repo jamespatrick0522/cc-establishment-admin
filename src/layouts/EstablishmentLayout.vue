@@ -14,6 +14,7 @@ import {
 
 import { getMyEstablishments } from '@/api/establishments.api';
 import { getConversations } from '@/api/messages.api';
+import IncomingCallManager from '@/components/calls/IncomingCallManager.vue';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
@@ -228,6 +229,7 @@ onBeforeUnmount(() => {
         </section>
       </main>
     </div>
+    <IncomingCallManager />
   </div>
 </template>
 

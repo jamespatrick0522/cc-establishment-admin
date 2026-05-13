@@ -1,6 +1,11 @@
 ﻿import { io, Socket } from 'socket.io-client';
 
-import type { ChatMessageFailedPayload, ChatMessageSentPayload, MessageItem } from '@/types/api';
+import type {
+  ChatMessageFailedPayload,
+  ChatMessageSentPayload,
+  MessageItem,
+  VoiceCallEventPayload,
+} from '@/types/api';
 
 export const CHAT_EVENTS = {
   JOIN_ESTABLISHMENT_INBOX: 'joinEstablishmentInbox',
@@ -9,6 +14,11 @@ export const CHAT_EVENTS = {
   MESSAGE_NEW: 'message.new',
   MESSAGE_SENT: 'message.sent',
   MESSAGE_FAILED: 'message.failed',
+  CALL_INCOMING: 'call.incoming',
+  CALL_ACCEPTED: 'call.accepted',
+  CALL_REJECTED: 'call.rejected',
+  CALL_MISSED: 'call.missed',
+  CALL_ENDED: 'call.ended',
 } as const;
 
 function normalizeBaseUrl(url: string): string {
@@ -81,6 +91,26 @@ export class ChatSocketClient {
 
   offMessageFailed(handler: (payload: ChatMessageFailedPayload) => void): void {
     this.socket?.off(CHAT_EVENTS.MESSAGE_FAILED, handler);
+  }
+
+  onCallIncoming(handler: (payload: VoiceCallEventPayload) => void): void {
+    this.socket?.on(CHAT_EVENTS.CALL_INCOMING, handler);
+  }
+
+  offCallIncoming(handler: (payload: VoiceCallEventPayload) => void): void {
+    this.socket?.off(CHAT_EVENTS.CALL_INCOMING, handler);
+  }
+
+  onCallEnded(handler: (payload: VoiceCallEventPayload) => void): void {
+    this.socket?.on(CHAT_EVENTS.CALL_ENDED, handler);
+    this.socket?.on(CHAT_EVENTS.CALL_MISSED, handler);
+    this.socket?.on(CHAT_EVENTS.CALL_REJECTED, handler);
+  }
+
+  offCallEnded(handler: (payload: VoiceCallEventPayload) => void): void {
+    this.socket?.off(CHAT_EVENTS.CALL_ENDED, handler);
+    this.socket?.off(CHAT_EVENTS.CALL_MISSED, handler);
+    this.socket?.off(CHAT_EVENTS.CALL_REJECTED, handler);
   }
 
   offAll(): void {
