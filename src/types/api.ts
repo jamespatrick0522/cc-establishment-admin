@@ -46,6 +46,8 @@ export interface Establishment {
   statusNote: string | null;
   verifiedByUserId: string | null;
   verifiedAt: string | null;
+  latitude: string | null;
+  longitude: string | null;
   createdAt: string;
   updatedAt: string;
 }

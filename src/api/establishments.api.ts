@@ -33,6 +33,12 @@ export interface UpdateEstablishmentStatusPayload {
   statusNote?: string;
 }
 
+export interface UpdateEstablishmentLocationPayload {
+  latitude: number;
+  longitude: number;
+  address?: string;
+}
+
 export async function getMyEstablishments(
   params: MyEstablishmentsParams = {},
 ): Promise<PaginatedResponse<Establishment>> {
@@ -60,6 +66,14 @@ export async function updateEstablishmentStatus(
   payload: UpdateEstablishmentStatusPayload,
 ): Promise<Establishment> {
   const { data } = await http.patch<Establishment>(`/establishments/${id}/status`, payload);
+  return data;
+}
+
+export async function updateEstablishmentLocation(
+  id: string,
+  payload: UpdateEstablishmentLocationPayload,
+): Promise<Establishment> {
+  const { data } = await http.patch<Establishment>(`/establishments/${id}/location`, payload);
   return data;
 }
 

@@ -4,10 +4,12 @@ import { onMounted, reactive, ref } from 'vue';
 import {
   createEstablishment,
   getMyEstablishments,
+  updateEstablishmentLocation,
   updateEstablishmentStatus,
   uploadEstablishmentCoverPhoto,
 } from '@/api/establishments.api';
 import PageHeader from '@/components/common/PageHeader.vue';
+import LocationPickerMap from '@/components/maps/LocationPickerMap.vue';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -19,6 +21,7 @@ import type { BusinessStatus, Establishment, EstablishmentCategory } from '@/typ
 const loading = ref(false);
 const saving = ref(false);
 const uploadingId = ref<string | null>(null);
+const locationSavingId = ref<string | null>(null);
 const message = ref('');
 const messageType = ref<'success' | 'error'>('success');
 const createModalOpen = ref(false);
@@ -159,6 +162,27 @@ async function saveStatus(item: Establishment) {
   }
 }
 
+async function saveLocation(
+  item: Establishment,
+  payload: { latitude: number; longitude: number; address?: string },
+) {
+  locationSavingId.value = item.id;
+  message.value = '';
+
+  try {
+    await updateEstablishmentLocation(item.id, payload);
+
+    messageType.value = 'success';
+    message.value = `Map location updated for ${item.name}.`;
+    await load();
+  } catch (error: any) {
+    messageType.value = 'error';
+    message.value = error?.response?.data?.message || 'Failed to update map location.';
+  } finally {
+    locationSavingId.value = null;
+  }
+}
+
 async function uploadCover(item: Establishment, event: Event) {
   const target = event.target as HTMLInputElement;
   const file = target.files?.[0];
@@ -272,6 +296,15 @@ onMounted(load);
             </div>
 
             <img v-if="item.coverPhotoUrl" :src="item.coverPhotoUrl" alt="Cover" class="h-44 w-full rounded-lg border object-cover" />
+
+            <LocationPickerMap
+              :latitude="item.latitude"
+              :longitude="item.longitude"
+              :address="item.address"
+              :establishment-name="item.name"
+              :saving="locationSavingId === item.id"
+              @save="saveLocation(item, $event)"
+            />
           </CardContent>
         </Card>
       </div>
