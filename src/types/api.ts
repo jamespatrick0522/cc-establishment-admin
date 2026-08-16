@@ -23,8 +23,31 @@ export type EstablishmentCategory =
   | 'mall'
   | 'other';
 
-export type ListingStatus = 'pending' | 'verified' | 'rejected';
+export type ListingStatus = 'draft' | 'pending' | 'verified' | 'rejected';
 export type BusinessStatus = 'open' | 'closed' | 'temporarily_closed';
+
+export interface EstablishmentMedia {
+  id: string;
+  establishmentId: string;
+  type: 'image' | 'video';
+  url: string;
+  publicId: string | null;
+  format: string | null;
+  bytes: number | null;
+  sortOrder: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface EstablishmentRequirements {
+  hasBusinessPermitNumber: boolean;
+  galleryImageCount: number;
+  minGalleryImages: number;
+  maxGalleryImages: number;
+  hasLocationVideo: boolean;
+  canSubmitForApproval: boolean;
+  missing: string[];
+}
 
 export interface Establishment {
   id: string;
@@ -35,6 +58,7 @@ export interface Establishment {
   address: string;
   description: string | null;
   services: string | null;
+  businessPermitNumber: string | null;
   contactNumber: string | null;
   email: string | null;
   opensAt: string | null;
@@ -48,6 +72,8 @@ export interface Establishment {
   verifiedAt: string | null;
   latitude: string | null;
   longitude: string | null;
+  media: EstablishmentMedia[];
+  requirements: EstablishmentRequirements;
   createdAt: string;
   updatedAt: string;
 }

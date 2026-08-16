@@ -14,12 +14,15 @@ export interface CreateEstablishmentPayload {
   address: string;
   description?: string;
   services?: string;
+  businessPermitNumber?: string;
   contactNumber?: string;
   email?: string;
   opensAt?: string;
   closesAt?: string;
   isOpenNow?: boolean;
 }
+
+export type UpdateEstablishmentProfilePayload = Partial<Omit<CreateEstablishmentPayload, 'isOpenNow'>>;
 
 export interface MyEstablishmentsParams {
   listingStatus?: ListingStatus;
@@ -61,6 +64,19 @@ export async function getEstablishmentById(id: string): Promise<Establishment> {
   return data;
 }
 
+export async function updateEstablishmentProfile(
+  id: string,
+  payload: UpdateEstablishmentProfilePayload,
+): Promise<Establishment> {
+  const { data } = await http.patch<Establishment>(`/establishments/${id}/profile`, payload);
+  return data;
+}
+
+export async function submitEstablishmentForApproval(id: string): Promise<Establishment> {
+  const { data } = await http.post<Establishment>(`/establishments/${id}/submit-for-approval`, {});
+  return data;
+}
+
 export async function updateEstablishmentStatus(
   id: string,
   payload: UpdateEstablishmentStatusPayload,
@@ -87,5 +103,36 @@ export async function uploadEstablishmentCoverPhoto(id: string, file: File): Pro
     },
   });
 
+  return data;
+}
+
+export async function uploadEstablishmentGalleryImage(id: string, file: File): Promise<Establishment> {
+  const formData = new FormData();
+  formData.append('image', file);
+
+  const { data } = await http.post<Establishment>(`/establishments/${id}/gallery-images`, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+
+  return data;
+}
+
+export async function uploadEstablishmentLocationVideo(id: string, file: File): Promise<Establishment> {
+  const formData = new FormData();
+  formData.append('video', file);
+
+  const { data } = await http.post<Establishment>(`/establishments/${id}/location-video`, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+
+  return data;
+}
+
+export async function deleteEstablishmentMedia(id: string, mediaId: string): Promise<Establishment> {
+  const { data } = await http.delete<Establishment>(`/establishments/${id}/media/${mediaId}`);
   return data;
 }
